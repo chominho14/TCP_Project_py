@@ -60,34 +60,41 @@ class UpDownServer:
                 
                 
                 self.final_received_message = (sender+"이(가) 선택한 번호 : {0} \n".format(num))
+                
+                # 1번째 선택한 번호
                 if self.draw_num == 1:
                     self.recv_num.append(sender)         
-                    self.recv_num.append(num)         
-                            
+                    self.recv_num.append(num)                                     
                     print(self.recv_num)
+                    
+                # 2번째 선택한 번호
                 if self.draw_num == 2:
                     self.recv_num.append(sender)         
-                    self.recv_num.append(num)         
-                            
+                    self.recv_num.append(num)                                     
                     print(self.recv_num)
+                
+                # 3번째 선택한 번호    
                 if self.draw_num == 3:
                     self.recv_num.append(sender)         
-                    self.recv_num.append(num)         
-                           
+                    self.recv_num.append(num)                                    
                     print(self.recv_num)
+                
+                # 4번째 선택한 번호    
                 if self.draw_num == 4:
                     self.recv_num.append(sender)         
-                    self.recv_num.append(num)         
-                            
+                    self.recv_num.append(num)                                     
                     print(self.recv_num)
+                
+                # 5번째 선택한 번호
                 if self.draw_num == 5:
                     self.recv_num.append(sender)         
-                    self.recv_num.append(num)         
-                            
+                    self.recv_num.append(num)                                     
                     print(self.recv_num)
+                
                 self.send_all_clients(self.final_received_message)
                 self.draw_num -= 1
                 
+                # 상요자가 선택한 번호에 따라 업다운 여부를 출력해 준다.
                 if self.win_number < int(num):
                     self.final_received_message = ('Down\n')
                     self.send_all_clients(self.final_received_message)
@@ -102,11 +109,13 @@ class UpDownServer:
                     print("정답입니다!")
                     self.user_done=False
                     
-                if self.draw_num > 0: # 정답 기회가 남았을 경우
+                # 정답 기회가 남았을 경우    
+                if self.draw_num > 0: 
                     self.final_received_message = ('정답까지 남은 횟수 : '+str(self.draw_num)+'개\n')
                     self.send_all_clients(self.final_received_message)
                 
-                else: #정답 기회가 남지 않았을 경우
+                #정답 기회가 남지 않았을 경우
+                else: 
                     self.final_received_message = ('실패!\n\n')
                     self.send_all_clients(self.final_received_message)
                     self.drawing_of_Lots(c_socket)
@@ -120,7 +129,10 @@ class UpDownServer:
                 
         c_socket.close()
     
-    def send_all_clients(self, senders_socket): #서버에게 보내는 메시지
+    def send_all_clients(self, senders_socket): 
+        """
+        서버에게 보내는 메시지
+        """
         for client in self.clients:
             socket, (ip, port) = client
             if socket is not senders_socket:
@@ -128,8 +140,11 @@ class UpDownServer:
                     socket.sendall(self.final_received_message.encode('utf-8'))
                 except:
                     pass
-
-    def drawing_of_Lots(self, senders_socket): #정답 발표
+    
+    def drawing_of_Lots(self, senders_socket): 
+        """
+        정답 발표
+        """
         self.final_received_message = ('정답은 ') #정답 출력
         self.final_received_message += str(self.win_number)+' '
         self.final_received_message += ('입니다!\n')
