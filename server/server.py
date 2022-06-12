@@ -13,6 +13,8 @@ class UpDownServer:
     
     counter_lock = Lock()
     counter=0
+    
+    user_done = True
         
 
     def __init__(self): #메인 함수
@@ -37,8 +39,8 @@ class UpDownServer:
             
 
     def receive_messages(self, c_socket):
-        while True:
-            self.counter_lock.acquire()
+        while self.user_done:
+            
             try:
                 incoming_message = c_socket.recv(1024)
                 if not incoming_message:
@@ -46,6 +48,8 @@ class UpDownServer:
             except:
                 continue
             else: #클라이언트가 보낸 데이터를 받아서 각 변수에 삽입
+                self.counter_lock.acquire()
+                
                 self.final_received_message = incoming_message.decode('utf-8')
                 sender = self.final_received_message.split()[0]
                 num = self.final_received_message.split()[1]
@@ -92,9 +96,9 @@ class UpDownServer:
                     self.final_received_message = ('정답입니다!\n')
                     self.send_all_clients(self.final_received_message)
                     print("정답입니다!")
-                    sys.exit()
+                    self.user_done=False
                     
-                if self.draw_num != 0: #복권 수가 남았을 경우
+                if self.draw_num > 0: #복권 수가 남았을 경우
                     self.final_received_message = ('정답까지 남은 횟수 : '+str(self.draw_num)+'개\n')
                     self.send_all_clients(self.final_received_message)
                 
@@ -102,9 +106,10 @@ class UpDownServer:
                     self.final_received_message = ('실패!\n\n')
                     self.send_all_clients(self.final_received_message)
                     self.drawing_of_Lots(c_socket)
-                    sys.exit()
+                    self.user_done=False
                 
                 self.counter_lock.release()
+            
                 
         c_socket.close()
     
@@ -117,8 +122,8 @@ class UpDownServer:
                 except:
                     pass
 
-    def drawing_of_Lots(self, senders_socket): #복권 추첨
-        self.final_received_message = ('정답은 ') #당첨 번호 출력
+    def drawing_of_Lots(self, senders_socket): #정답 발표
+        self.final_received_message = ('정답은 ') #정답 출력
         self.final_received_message += str(self.win_number)+' '
         self.final_received_message += ('입니다!\n')
         self.send_all_clients(self.final_received_message)

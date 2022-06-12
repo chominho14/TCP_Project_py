@@ -2,7 +2,7 @@ from socket import *
 from tkinter import *
 from tkinter.scrolledtext import ScrolledText
 from threading import *
-import tkinter as tk
+
 
 class UpDownClient:
     client_socket = None
@@ -23,18 +23,15 @@ class UpDownClient:
     
     def send_chat(self):
         '''
-        message를 전송하는 callback함수
+        사용자 이름과 사용자가 입력한 숫자 전송하는 callback함수
         '''
         senders_name = self.name_widget.get().strip() #사용자 이름을 가져온다
-        # 각 숫자들을 가져온다.
-        data1 = self.enter_number1.get()+' '
         
+        data = self.input_num.get() # 사용자가 입력한 숫자를 가져온다.
 
-        data_num = (data1)
+        send_to_server_message = (senders_name+' '+data).encode('utf-8') #전체 숫자 데이터를 인코딩화
 
-        send_to_server_message = (senders_name+' '+data_num).encode('utf-8') #전체 숫자 데이터를 인코딩화
-
-        self.chat_transcript_area.yview(END)
+        self.ScrTxt_Area.yview(END)
         self.client_socket.send(send_to_server_message) 
         return 'break'
 
@@ -42,26 +39,26 @@ class UpDownClient:
         '''
         위젯을 배치하고 초기화한다.
         '''
-        self.root = tk.Tk()
+        self.root = Tk()
         
-        self.name_label = Label(self.root, text='사용자 이름')
-        self.result_label = Label(self.root, text='결과 화면')
-        self.send_label = Label(self.root, text='1~50 사이의 숫자를 입력해 주세요')
-        self.send_btn = Button(self.root, text='전송', command=self.send_chat)
-        self.chat_transcript_area = ScrolledText(self.root, height=20, width=60)
+        self.lbl_name = Label(self.root, text='사용자 이름')
+        self.lbl_result = Label(self.root, text='결과 화면')
+        self.lbl_send = Label(self.root, text='1~50 사이의 숫자를 입력해 주세요')
+        self.btn_send = Button(self.root, text='전송', command=self.send_chat)
+        self.ScrTxt_Area = ScrolledText(self.root, height=20, width=60)
         self.name_widget = Entry(self.root, width=15)
         
-        self.enter_number1 = Entry(self.root, width=5)
+        self.input_num = Entry(self.root, width=5)
         
  
-        self.name_label.pack()
+        self.lbl_name.pack()
         self.name_widget.pack()
-        self.result_label.pack()
-        self.chat_transcript_area.pack()
-        self.send_label.pack()
+        self.lbl_result.pack()
+        self.ScrTxt_Area.pack()
+        self.lbl_send.pack()
         
-        self.enter_number1.pack()
-        self.send_btn.pack()
+        self.input_num.pack()
+        self.btn_send.pack()
         
 
     def listen_thread(self):
@@ -81,8 +78,8 @@ class UpDownClient:
             buf = so.recv(1024) #결과 문자열이 길어 1024로 설정
             if not buf:
                 break
-            self.chat_transcript_area.insert('end', buf.decode('utf-8') + '\n')
-            self.chat_transcript_area.yview(END)
+            self.ScrTxt_Area.insert('end', buf.decode('utf-8') + '\n')
+            self.ScrTxt_Area.yview(END)
         so.close()
     
 
