@@ -47,7 +47,11 @@ class UpDownServer:
                     break
             except:
                 continue
-            else: #클라이언트가 보낸 데이터를 받아서 각 변수에 삽입
+            else: # 클라이언트가 보낸 데이터를 받아서 각 변수에 삽입
+                
+                """
+                뮤택스 - acquire()를 이용하여 Lock을 걸어준다.
+                """
                 self.counter_lock.acquire()
                 
                 self.final_received_message = incoming_message.decode('utf-8')
@@ -98,16 +102,19 @@ class UpDownServer:
                     print("정답입니다!")
                     self.user_done=False
                     
-                if self.draw_num > 0: #복권 수가 남았을 경우
+                if self.draw_num > 0: # 정답 기회가 남았을 경우
                     self.final_received_message = ('정답까지 남은 횟수 : '+str(self.draw_num)+'개\n')
                     self.send_all_clients(self.final_received_message)
                 
-                else: #복권 수가 남지 않았을 경우
+                else: #정답 기회가 남지 않았을 경우
                     self.final_received_message = ('실패!\n\n')
                     self.send_all_clients(self.final_received_message)
                     self.drawing_of_Lots(c_socket)
                     self.user_done=False
                 
+                """
+                뮤택스 - release()를 이용하여 Lock을 풀어준다.
+                """
                 self.counter_lock.release()
             
                 
