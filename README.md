@@ -4,7 +4,7 @@
 
 ### 프로젝트 상세설명
 
-- Notion - https://gleaming-garlic-1d6.notion.site/mini-project-f64c09d9c57f4c37bd5fe59bece7ba15
+Notion - https://gleaming-garlic-1d6.notion.site/mini-project-f64c09d9c57f4c37bd5fe59bece7ba15
 
 ---
 
