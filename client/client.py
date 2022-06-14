@@ -6,17 +6,19 @@ from threading import *
 
 class UpDownClient:
     client_socket = None
-
-    def __init__(self, ip, port): #메인함수
+    
+    # 메인 함수
+    def __init__(self, ip, port):
         self.initialize_socket(ip, port)
         self.initialize_gui()
         self.listen_thread()
     
-    def initialize_socket(self, ip, port): #server에 연결
+    
+    def initialize_socket(self, ip, port): 
         '''
         TCP socket을 생성하고 server에게 연결
         '''
-        self.client_socket = socket(AF_INET, SOCK_STREAM)
+        self.client_socket = socket(AF_INET, SOCK_STREAM) # 
         remote_ip = ip
         remote_port = port
         self.client_socket.connect((remote_ip, remote_port))
@@ -37,7 +39,7 @@ class UpDownClient:
 
     def initialize_gui(self):
         '''
-        위젯을 배치하고 초기화한다.
+        tkinter을 이용해 위젯을 배치하고 초기화한다.
         '''
         self.root = Tk()
         
@@ -85,6 +87,8 @@ class UpDownClient:
 
 if __name__ == "__main__":
     ip = input("server IP addr: ")
+    
+    # 사용자가 ip를 입력하지 않았을 시에 기본 ip를 넣어준다.
     if ip =='':
         ip = '127.0.0.1'
     port = 2500

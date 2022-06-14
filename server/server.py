@@ -5,26 +5,27 @@ import sys
 
 class UpDownServer:
     clients = []
-    final_received_message = ""
-    senders_num = 0
-    draw_num = 5
-    recv_num = []
-    win_number = random.randrange(1,51)
+    final_received_message = "" # 마지막에 뿌려줄 메시지 변수
+    senders_num = 0 # 입장한 사용자를 담을 변수
+    draw_num = 5 # 5번 숫자를 입력할 수 있는 변수
+    recv_num = [] # 사용자가 입력한 숫자 변수
+    win_number = random.randrange(1,51) # 1에서 50 사이의 변수
     
-    counter_lock = Lock()
-    counter=0
+    counter_lock = Lock() # 뮤택스 사용
     
     user_done = True
         
 
     def __init__(self): #메인 함수
-        self.s_sock = socket(AF_INET, SOCK_STREAM) #소켓 생성
+        self.s_sock = socket(AF_INET, SOCK_STREAM) #소켓 생성, IPv4, TCP타입
         self.ip = ''
         self.port = 2500
-        self.s_sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-        self.s_sock.bind((self.ip, self.port))
+        self.s_sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1) # 포트 사용 중 에러 해결
+        self.s_sock.bind((self.ip, self.port)) # Ip주소, 포트 번호 socket에 bind
         print("Waiting for clients...")
-        self.s_sock.listen(100)
+        self.s_sock.listen(100) # 서버가 클라이언트와 접속 허용
+        
+        # 클라이언트와 연결 메서드
         self.accept_client()
     
     def accept_client(self): #클라이언트와 연결
@@ -137,6 +138,7 @@ class UpDownServer:
             socket, (ip, port) = client
             if socket is not senders_socket:
                 try:
+                    # 클라이언트에 메시지 보내기
                     socket.sendall(self.final_received_message.encode('utf-8'))
                 except:
                     pass
